@@ -19,7 +19,7 @@ const Starting = ({ isComplete }) => {
 
   return (
     <div
-      className={`h-dvh w-full fixed z-30 grid place-content-center grid-cols-2 gap-6 overflow-hidden transition-opacity duration-500 will-animate ${
+      className={`m-0 p-0 h-dvh w-full fixed z-30 grid place-content-center grid-cols-2 gap-6 overflow-hidden transition-opacity duration-500 ${
         isComplete ? 'opacity-0 pointer-events-none' : ''
       }`}
       role="dialog"
@@ -35,7 +35,7 @@ const Starting = ({ isComplete }) => {
       <h1 className="sr-only">Milén Arquitectura - Cargando</h1>
       <span 
         id="starting-title" 
-        className="text-3xl font-bold font-serif text-white justify-self-end relative z-10" 
+        className="text-2xl font-bold font-serif text-white justify-self-end relative z-10" 
         role="heading" 
         aria-level="2"
         aria-label="Milén"
@@ -45,7 +45,7 @@ const Starting = ({ isComplete }) => {
       <span 
         id="starting-sections" 
         className="text-2xl text-white tracking-widest relative z-10" 
-        aria-label="Arquitectura"
+        aria-label="Secciones de la página"
       >
         IPSNC
       </span>
