@@ -37,7 +37,7 @@ const Header = () => {
 
   return (
     <nav id="nav" className="bg-white fixed top-0 left-0 right-0 z-10 " aria-label="Menú principal de navegación">
-      <div className="flex justify-between items-center p-5 max-w-7xl mx-auto">
+      <div className="flex justify-between items-center p-5">
         <div className="text-3xl font-bold font-serif" aria-label="Logo Milen Arquitectos">
           <Link to="/" onClick={handleNav} aria-label="Ir a inicio" title="Inicio">MA</Link>
         </div>
