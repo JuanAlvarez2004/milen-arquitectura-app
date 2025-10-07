@@ -14,6 +14,8 @@ import Starting from '../components/Starting.jsx'
 import SEOHead from '../components/SEOHead.jsx'
 import SchemaMarkup from '../components/SchemaMarkup.jsx'
 
+import { useMediaQuery } from "react-responsive"
+
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin, SplitText, ScrollToPlugin, Draggable)
 
@@ -91,6 +93,7 @@ function Home() {
   const projectRefs = useRef([])
   const draggableInstances = useRef([])
   const scrollTriggerInstances = useRef([])
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' })
   
   useLayoutEffect(() => {
     // Configuración inmediata
@@ -165,14 +168,14 @@ function Home() {
       }, 0)
       .to('#starting-title', {
           duration: .5,
-          x: (-window.innerWidth / 2) + 148,
+          x: (-window.innerWidth / 2) + 120, //148
           y: (-window.innerHeight / 2) + 40,
           stagger: 0.05,
           ease: 'power1.in'
       })
       .to('#starting-sections', {
           duration: .5,
-          x: (window.innerWidth / 2) - 110,
+          x: (window.innerWidth / 2) - 105, //110
           y: (-window.innerHeight / 2) + 40,
           stagger: 0.05,
           ease: 'power1.in'
@@ -239,6 +242,7 @@ function Home() {
       }, '<')
       .from('#image-arqs', {
         autoAlpha: 0,
+        filter: 'blur(10px)',
         y: 40,
         duration: 1,
         ease: 'power1.in'
@@ -287,13 +291,25 @@ function Home() {
     
     const el = projectRefs.current[idx]
     const scrollTrigger = scrollTriggerInstances.current[idx]
+    const widthEl = el.offsetWidth
 
     if (el) {
       // Si se está abriendo el proyecto
       if (!isOpen[idx] && newIsOpen[idx]) {
         gsap.from(el, {
           duration: 1,
-          autoAlpha: 0
+          autoAlpha: 0,
+          ease: "power1.out"
+        })
+        
+        let heightToMove = isMobile ? 250 : 460
+        let offSetX = isMobile ? -90 : 300
+        
+        gsap.to(el, {
+          height: heightToMove,
+          x: (widthEl / 2) - offSetX,
+          duration: 1,
+          ease: "power1.out"
         })
         
         // Pausar ScrollTrigger y resetear escala
@@ -315,6 +331,13 @@ function Home() {
           draggableInstances.current[idx].kill()
           draggableInstances.current[idx] = null
         }
+
+        gsap.to(el, {
+          height: "auto",
+          x: 0,
+          duration: .8,
+          ease: "power1.out"
+        })
         
         // Resetear posición
         gsap.set(el, { x: 0 })
