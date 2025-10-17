@@ -33,7 +33,7 @@ const projectsObjs = [
     id: 2,
     title: "Wave House",
     description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://arquine.com/wp-content/uploads/2014/03/Untitled-2.jpg",
+    image: "https://cdn.pixabay.com/photo/2014/07/10/17/18/large-home-389271_1280.jpg",
     location: "Malibu, California",
     year: "2023",
     icon: 'https://svgsilh.com/svg_v2/304326.svg'
@@ -42,7 +42,7 @@ const projectsObjs = [
     id: 3,
     title: "Wave House",
     description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://arquine.com/wp-content/uploads/2014/03/Untitled-2.jpg",
+    image: "https://cdn.pixabay.com/photo/2017/07/09/03/19/home-2486092_1280.jpg",
     location: "Malibu, California",
     year: "2023",
     icon: 'https://svgsilh.com/svg_v2/304326.svg'
@@ -51,7 +51,7 @@ const projectsObjs = [
     id: 4,
     title: "Wave House",
     description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://arquine.com/wp-content/uploads/2014/03/Untitled-2.jpg",
+    image: "https://cdn.pixabay.com/photo/2020/04/17/12/28/pool-5055009_1280.jpg",
     location: "Malibu, California",
     year: "2023",
     icon: 'https://svgsilh.com/svg_v2/304326.svg'
@@ -60,7 +60,7 @@ const projectsObjs = [
     id: 5,
     title: "Wave House",
     description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://arquine.com/wp-content/uploads/2014/03/Untitled-2.jpg",
+    image: "https://cdn.pixabay.com/photo/2017/03/28/12/13/chairs-2181968_1280.jpg",
     location: "Malibu, California",
     year: "2023",
     icon: 'https://svgsilh.com/svg_v2/304326.svg'
@@ -69,7 +69,7 @@ const projectsObjs = [
     id: 6,
     title: "Wave House",
     description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://arquine.com/wp-content/uploads/2014/03/Untitled-2.jpg",
+    image: "https://cdn.pixabay.com/photo/2018/01/25/20/53/lifestyle-3107041_1280.jpg",
     location: "Malibu, California",
     year: "2023",
     icon: 'https://svgsilh.com/svg_v2/304326.svg'
@@ -78,7 +78,7 @@ const projectsObjs = [
     id: 7,
     title: "Wave House",
     description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://arquine.com/wp-content/uploads/2014/03/Untitled-2.jpg",
+    image: "https://cdn.pixabay.com/photo/2020/06/25/10/21/architecture-5339245_1280.jpg",
     location: "Malibu, California",
     year: "2023",
     icon: 'https://svgsilh.com/svg_v2/304326.svg'
@@ -168,14 +168,14 @@ function Home() {
       }, 0)
       .to('#starting-title', {
           duration: .5,
-          x: (-window.innerWidth / 2) + 120, //148
+          x: (-window.innerWidth / 2) + 120, 
           y: (-window.innerHeight / 2) + 40,
           stagger: 0.05,
           ease: 'power1.in'
       })
       .to('#starting-sections', {
           duration: .5,
-          x: (window.innerWidth / 2) - 105, //110
+          x: (window.innerWidth / 2) - 105,
           y: (-window.innerHeight / 2) + 40,
           stagger: 0.05,
           ease: 'power1.in'
