@@ -66,7 +66,7 @@ function Services() {
   }
 
   return (
-    <div className="min-h-screen pt-24 p-2 text-gray-700">
+    <div className="min-h-screen pt-24 px-5 text-gray-700">
       <SEOHead 
         title="Servicios - Milén Arquitectura | Diseño Arquitectónico e Interiorismo"
         description="Descubre nuestros servicios de diseño arquitectónico, interiorismo, consultoría y gestión de proyectos. Enfoque residencial y comercial en Ibagué, Tolima."

@@ -12,6 +12,7 @@ const Header = () => {
   const handleNav = () => setIsOpen(false)
 
   useEffect(() => {
+    // Animacion de salida del menu hamburguesa cuando se cierra
     if (isOpen) {
       setShowMenu(true); 
     } else if (showMenu) {
@@ -25,13 +26,26 @@ const Header = () => {
     }
   }, [isOpen, showMenu])
 
+  // Animación de entrada del menú hamburguesa cuando se abre
   useEffect(() => {
+    const liBurger = document.querySelectorAll("#navBurger li") 
+    const underlines = document.querySelectorAll("#navBurger .nav-underline")
+    const tl = gsap.timeline()
+
     if (showMenu && isOpen) {
-      gsap.fromTo(
+      tl.fromTo(
         "#navBurger",
         { y: -30, autoAlpha: 0 },
         { y: 0, autoAlpha: 1, duration: 0.5, ease: "power1.inOut" }
-      );
+      )
+      .fromTo(liBurger, 
+        { y: -10, alpha: 0 }, 
+        { y: 0, alpha: 1, duration: 0.2, ease: "power1.inOut", stagger: 0.1 }, "<.2"
+      )
+      .fromTo(underlines,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.5, ease: "power2.out", stagger: 0.1, transformOrigin: "left center" }, "<"
+      )
     }
   }, [showMenu, isOpen])
 
@@ -43,7 +57,7 @@ const Header = () => {
         </div>
         {/* Botón hamburguesa */}
         <button
-          className="md:hidden text-3xl focus:outline-none"
+          className="md:hidden text-3xl focus:outline-none cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
           aria-expanded={isOpen}
@@ -55,7 +69,7 @@ const Header = () => {
         <ul className="hidden md:flex gap-12 items-center" role="menubar" aria-label="Opciones principales">
           <li role="none">
             <Link
-              className={`text-gray-700 text-xs tracking-widest ${location.pathname === '/' ? 'font-bold text-black' : ''}`}
+              className={`text-xs tracking-widest ${location.pathname === '/' ? 'font-bold text-black' : ''}`}
               to="/"
               onClick={handleNav}
               role="menuitem"
@@ -69,7 +83,7 @@ const Header = () => {
           <li role="none">
             {location.pathname === '/' ? (
               <a
-                className={`text-gray-700 text-xs tracking-widest ${location.hash === '#projects' ? 'font-bold text-black' : ''}`}
+                className={`text-xs tracking-widest ${location.hash === '#projects' ? 'font-bold text-black' : ''}`}
                 href="#projects"
                 onClick={handleNav}
                 role="menuitem"
@@ -81,7 +95,7 @@ const Header = () => {
               </a>
             ) : (
               <Link
-                className="text-gray-700 text-xs tracking-widest"
+                className="text-xs tracking-widest"
                 to="/"
                 onClick={handleNav}
                 role="menuitem"
@@ -94,7 +108,7 @@ const Header = () => {
           </li>
           <li role="none">
             <Link
-              className={`text-gray-700 text-xs tracking-widest ${location.pathname === '/services' ? 'font-bold text-black' : ''}`}
+              className={`text-xs tracking-widest ${location.pathname === '/services' ? 'font-bold text-black' : ''}`}
               to="/services"
               onClick={handleNav}
               role="menuitem"
@@ -107,7 +121,7 @@ const Header = () => {
           </li>
           <li role="none">
             <Link
-              className={`text-gray-700 text-xs tracking-widest ${location.pathname === '/about' ? 'font-bold text-black' : ''}`}
+              className={`text-xs tracking-widest ${location.pathname === '/about' ? 'font-bold text-black' : ''}`}
               to="/about"
               onClick={handleNav}
               role="menuitem"
@@ -120,7 +134,7 @@ const Header = () => {
           </li>
           <li role="none">
             <Link
-              className={`text-gray-700 text-xs tracking-widest ${location.pathname === '/contact' ? 'font-bold text-black' : ''}`}
+              className={`text-xs tracking-widest ${location.pathname === '/contact' ? 'font-bold text-black' : ''}`}
               to="/contact"
               onClick={handleNav}
               role="menuitem"
@@ -136,9 +150,9 @@ const Header = () => {
       {/* Menú hamburguesa (mobile) */}
       {showMenu && (
         <ul id='navBurger' className="flex flex-col items-end pr-10 gap-3 bg-white py-8 md:hidden" role="menu" aria-label="Opciones móviles">          
-          <li role="none">
+          <li role="none" className="flex flex-col">
             <Link
-              className={`text-gray-700 text-base tracking-widest ${location.pathname === '/' ? 'font-bold text-black' : ''}`}
+              className={`text-base tracking-widest ${location.pathname === '/' ? 'font-bold' : ''}`}
               to="/"
               onClick={handleNav}
               role="menuitem"
@@ -146,13 +160,14 @@ const Header = () => {
               tabIndex={0}
               title="Inicio"
             >
-              INICIO
+              Inicio
             </Link>
+            <span className="nav-underline block h-px bg-black"></span>
           </li>
-          <li role="none">
+          <li role="none" className="flex flex-col">
             {location.pathname === '/' ? (
               <a
-                className={`text-gray-700 text-base tracking-widest ${location.hash === '#projects' ? 'font-bold text-black' : ''}`}
+                className={`text-base tracking-widest ${location.hash === '#projects' ? 'font-bold text-black' : ''}`}
                 href="#projects"
                 onClick={handleNav}
                 role="menuitem"
@@ -160,24 +175,25 @@ const Header = () => {
                 tabIndex={0}
                 title="Proyectos"
               >
-                PROYECTOS
+                Proyectos
               </a>
             ) : (
               <Link
-                className="text-gray-700 text-base tracking-widest"
+                className="text-base tracking-widest"
                 to="/"
                 onClick={handleNav}
                 role="menuitem"
                 tabIndex={0}
                 title="Proyectos"
               >
-                PROYECTOS
+                Proyectos
               </Link>
             )}
+            <span className="nav-underline block h-px bg-black"></span>
           </li>
-          <li role="none">
+          <li role="none" className="flex flex-col">
             <Link
-              className={`text-gray-700 text-base tracking-widest ${location.pathname === '/services' ? 'font-bold text-black' : ''}`}
+              className={`text-base tracking-widest ${location.pathname === '/services' ? 'font-bold text-black' : ''}`}
               to="/services"
               onClick={handleNav}
               role="menuitem"
@@ -185,12 +201,13 @@ const Header = () => {
               tabIndex={0}
               title="Servicios"
             >
-              SERVICIOS
+              Servicios
             </Link>
+            <span className="nav-underline block h-px bg-black"></span>
           </li>
-          <li role="none">
+          <li role="none" className="flex flex-col">
             <Link
-              className={`text-gray-700 text-base tracking-widest ${location.pathname === '/about' ? 'font-bold text-black' : ''}`}
+              className={`text-base tracking-widest ${location.pathname === '/about' ? 'font-bold text-black' : ''}`}
               to="/about"
               onClick={handleNav}
               role="menuitem"
@@ -198,12 +215,13 @@ const Header = () => {
               tabIndex={0}
               title="Nosotros"
             >
-              NOSOTROS
+              Nosotros
             </Link>
+            <span className="nav-underline block h-px bg-black"></span>
           </li>
-          <li role="none">
+          <li role="none" className="flex flex-col">
             <Link
-              className={`text-gray-700 text-base tracking-widest ${location.pathname === '/contact' ? 'font-bold text-black' : ''}`}
+              className={`text-base tracking-widest ${location.pathname === '/contact' ? 'font-bold text-black' : ''}`}
               to="/contact"
               onClick={handleNav}
               role="menuitem"
@@ -211,8 +229,9 @@ const Header = () => {
               tabIndex={0}
               title="Contacto"
             >
-              CONTACTO
+              Contacto
             </Link>
+            <span className="nav-underline block h-px bg-black"></span>
           </li>
         </ul>
       )}

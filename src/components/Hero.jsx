@@ -2,7 +2,7 @@ import arqsImg from '../assets/images/arqs.webp'
 
 const Hero = () => {
   return (
-    <header className="w-full mt-15 p-20 text-gray-700 text-center md:text-left text-balance flex flex-col md:flex-row items-center justify-center flex-wrap gap-4" aria-label="Sección principal de presentación">
+    <header id='header' className="w-full mt-15 p-20 text-gray-700 text-center md:text-left text-balance flex flex-col md:flex-row items-center justify-center flex-wrap gap-4" aria-label="Sección principal de presentación">
       <section className="w-full md:w-2xl mb-6 md:mb-0" aria-labelledby="title" aria-describedby="description">
         <h1 id="title" className="font-serif text-center md:text-left text-2xl md:text-5xl text-black font-bold py-3">MILÉN ARQUITECTURA</h1>
         <div id="description">
