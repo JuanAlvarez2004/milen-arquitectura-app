@@ -6,46 +6,53 @@ import { useEffect } from "react";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [showMenu, setShowMenu] = useState(false); 
+  const [showMenu, setShowMenu] = useState(false);
   const location = useLocation()
 
   const handleNav = () => setIsOpen(false)
 
   useEffect(() => {
-    // Animacion de salida del menu hamburguesa cuando se cierra
     if (isOpen) {
-      setShowMenu(true); 
+      setShowMenu(true);
     } else if (showMenu) {
-      gsap.to("#navBurger", {
-        y: -30,
-        autoAlpha: 0,
-        duration: 0.1,
-        ease: "power1.inOut",
-        onComplete: () => setShowMenu(false),
-      });
+      // Cierre: primero ítems desaparecen, luego el fondo se contrae
+      const liBurger = document.querySelectorAll("#navBurger li")
+      const underlines = document.querySelectorAll("#navBurger .nav-underline")
+      const tl = gsap.timeline({ onComplete: () => setShowMenu(false) })
+      tl
+        .to(underlines, {
+          scaleX: 0, duration: 0.18, ease: "power2.in",
+          stagger: { each: 0.06, from: "end" }, transformOrigin: "left center"
+        })
+        .to(liBurger, {
+          y: -8, alpha: 0, duration: 0.18, ease: "power1.in",
+          stagger: { each: 0.06, from: "end" }
+        }, "<")
+        .to("#navBurgerWrapper", { height: 0, duration: 0.4, ease: "power2.inOut", marginLeft: 60, marginRight: 60}, ">-.05")
     }
   }, [isOpen, showMenu])
 
-  // Animación de entrada del menú hamburguesa cuando se abre
+  // Apertura: fondo se estira → luego aparecen los ítems con stagger
   useEffect(() => {
-    const liBurger = document.querySelectorAll("#navBurger li") 
-    const underlines = document.querySelectorAll("#navBurger .nav-underline")
-    const tl = gsap.timeline()
-
     if (showMenu && isOpen) {
-      tl.fromTo(
-        "#navBurger",
-        { y: -30, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.5, ease: "power1.inOut" }
-      )
-      .fromTo(liBurger, 
-        { y: -10, alpha: 0 }, 
-        { y: 0, alpha: 1, duration: 0.2, ease: "power1.inOut", stagger: 0.1 }, "<.2"
-      )
-      .fromTo(underlines,
-        { scaleX: 0 },
-        { scaleX: 1, duration: 0.5, ease: "power2.out", stagger: 0.1, transformOrigin: "left center" }, "<"
-      )
+      const liBurger = document.querySelectorAll("#navBurger li")
+      const underlines = document.querySelectorAll("#navBurger .nav-underline")
+
+      gsap.set(liBurger, { y: 12, alpha: 0 })
+      gsap.set(underlines, { scaleX: 0 })
+      gsap.set("#navBurgerWrapper", { height: 0, marginLeft: 60, marginRight: 60 })
+
+      const tl = gsap.timeline()
+      tl
+        .to("#navBurgerWrapper", {
+          height: "auto", duration: 0.45, marginLeft: 20, marginRight: 20, ease: "power2.inOut"
+        })
+        .to(liBurger, {
+          y: 0, alpha: 1, duration: 0.22, ease: "power2.out", stagger: 0.09
+        }, "<.3")
+        .to(underlines, {
+          scaleX: 1, duration: 0.4, ease: "power2.out", stagger: 0.09, transformOrigin: "left center"
+        }, "<")
     }
   }, [showMenu, isOpen])
 
@@ -149,10 +156,11 @@ const Header = () => {
       </div>
       {/* Menú hamburguesa (mobile) */}
       {showMenu && (
-        <ul id='navBurger' className="flex flex-col items-end pr-10 gap-3 bg-white py-8 md:hidden" role="menu" aria-label="Opciones móviles">          
+        <div id="navBurgerWrapper" className="md:hidden overflow-hidden bg-black" style={{ height: 0 }}>
+        <ul id='navBurger' className="flex flex-col items-end pr-10 gap-3 py-8" role="menu" aria-label="Opciones móviles">
           <li role="none" className="flex flex-col">
             <Link
-              className={`text-base tracking-widest ${location.pathname === '/' ? 'font-bold' : ''}`}
+              className={`text-white tracking-widest ${location.pathname === '/' ? 'font-bold' : ''}`}
               to="/"
               onClick={handleNav}
               role="menuitem"
@@ -162,12 +170,12 @@ const Header = () => {
             >
               Inicio
             </Link>
-            <span className="nav-underline block h-px bg-black"></span>
+            <span className="nav-underline block h-px bg-white"></span>
           </li>
           <li role="none" className="flex flex-col">
             {location.pathname === '/' ? (
               <a
-                className={`text-base tracking-widest ${location.hash === '#projects' ? 'font-bold text-black' : ''}`}
+                className={`text-white tracking-widest ${location.hash === '#projects' ? 'font-bold' : ''}`}
                 href="#projects"
                 onClick={handleNav}
                 role="menuitem"
@@ -179,7 +187,7 @@ const Header = () => {
               </a>
             ) : (
               <Link
-                className="text-base tracking-widest"
+                className="text-white tracking-widest"
                 to="/"
                 onClick={handleNav}
                 role="menuitem"
@@ -189,11 +197,11 @@ const Header = () => {
                 Proyectos
               </Link>
             )}
-            <span className="nav-underline block h-px bg-black"></span>
+            <span className="nav-underline block h-px bg-white"></span>
           </li>
           <li role="none" className="flex flex-col">
             <Link
-              className={`text-base tracking-widest ${location.pathname === '/services' ? 'font-bold text-black' : ''}`}
+              className={`text-white tracking-widest ${location.pathname === '/services' ? 'font-bold' : ''}`}
               to="/services"
               onClick={handleNav}
               role="menuitem"
@@ -203,11 +211,11 @@ const Header = () => {
             >
               Servicios
             </Link>
-            <span className="nav-underline block h-px bg-black"></span>
+            <span className="nav-underline block h-px bg-white"></span>
           </li>
           <li role="none" className="flex flex-col">
             <Link
-              className={`text-base tracking-widest ${location.pathname === '/about' ? 'font-bold text-black' : ''}`}
+              className={`text-white tracking-widest ${location.pathname === '/about' ? 'font-bold' : ''}`}
               to="/about"
               onClick={handleNav}
               role="menuitem"
@@ -217,11 +225,11 @@ const Header = () => {
             >
               Nosotros
             </Link>
-            <span className="nav-underline block h-px bg-black"></span>
+            <span className="nav-underline block h-px bg-white"></span>
           </li>
           <li role="none" className="flex flex-col">
             <Link
-              className={`text-base tracking-widest ${location.pathname === '/contact' ? 'font-bold text-black' : ''}`}
+              className={`text-white tracking-widest ${location.pathname === '/contact' ? 'font-bold' : ''}`}
               to="/contact"
               onClick={handleNav}
               role="menuitem"
@@ -231,9 +239,10 @@ const Header = () => {
             >
               Contacto
             </Link>
-            <span className="nav-underline block h-px bg-black"></span>
+            <span className="nav-underline block h-px bg-white"></span>
           </li>
         </ul>
+        </div>
       )}
     </nav>
   );
