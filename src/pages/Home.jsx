@@ -25,6 +25,9 @@ gsap.registerPlugin(ScrollTrigger, TextPlugin, SplitText, ScrollToPlugin, Dragga
 function Home() {
   const [startingComplete, setStartingComplete] = useState(false)
   const [isReady, setIsReady] = useState(false)
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [projects, setProjects] = useState([])
   const [isOpen, setIsOpen] = useState([])
   const projectRefs = useRef([])
@@ -44,12 +47,17 @@ function Home() {
   useEffect(() => {
     let mounted = true
     const controller = new AbortController()
+    setLoading(true)
+    setError(null)
 
     fetchHomePage(controller.signal)
       .then(({ data }) => {
         if (!mounted) return
 
-        const cmsProjects = Array.isArray(data?.project) ? data.project : []
+        setData(data)
+        const cmsProjects = Array.isArray(data?.project)
+          ? data.project
+          : (Array.isArray(data?.projects) ? data.projects : [])
         const parsedProjects = cmsProjects.map((project, idx) => {
           const image1 = resolveMediaUrl(project?.image1)
           const image2 = resolveMediaUrl(project?.image2) || image1
@@ -71,6 +79,11 @@ function Home() {
       .catch(err => {
         if (!mounted || err.name === 'AbortError') return
         console.error('Error fetching projects from CMS:', err)
+        setError(err)
+      })
+      .finally(() => {
+        if (!mounted) return
+        setLoading(false)
       })
 
     return () => {
@@ -150,36 +163,36 @@ function Home() {
         opacity: 0,
         stagger: { each: 0.2 },
       }, 0)
-      .to('#starting-title', {
-        duration: .5,
-        x: (-window.innerWidth / 2) + 120,
-        y: (-window.innerHeight / 2) + 40,
-        stagger: 0.05,
-        ease: 'power1.in'
-      })
-      .to('#starting-sections', {
-        duration: .5,
-        x: (window.innerWidth / 2) - 105,
-        y: (-window.innerHeight / 2) + 40,
-        stagger: 0.05,
-        ease: 'power1.in'
-      }, '<')
-      .to(splitTitle.chars, {
-        duration: .2,
-        x: -20,
-        opacity: 0,
-        stagger: { each: 0.08, from: 'end' }
-      })
-      .to(splitSections.chars, {
-        duration: .2,
-        x: 20,
-        opacity: 0,
-        stagger: { each: 0.08 }
-      }, '<')
-      .to('#starting-bg', {
-        y: -window.innerHeight,
-        duration: 1
-      }, '-=0.8')
+        .to('#starting-title', {
+          duration: .5,
+          x: (-window.innerWidth / 2) + 120,
+          y: (-window.innerHeight / 2) + 40,
+          stagger: 0.05,
+          ease: 'power1.in'
+        })
+        .to('#starting-sections', {
+          duration: .5,
+          x: (window.innerWidth / 2) - 105,
+          y: (-window.innerHeight / 2) + 40,
+          stagger: 0.05,
+          ease: 'power1.in'
+        }, '<')
+        .to(splitTitle.chars, {
+          duration: .2,
+          x: -20,
+          opacity: 0,
+          stagger: { each: 0.08, from: 'end' }
+        })
+        .to(splitSections.chars, {
+          duration: .2,
+          x: 20,
+          opacity: 0,
+          stagger: { each: 0.08 }
+        }, '<')
+        .to('#starting-bg', {
+          y: -window.innerHeight,
+          duration: 1
+        }, '-=0.8')
 
       return startingTL
     }
@@ -206,11 +219,11 @@ function Home() {
         alpha: 0,
         delay: 0.5,
       })
-      .from('#projects', {
-        y: -20,
-        duration: 0.5,
-        alpha: 0,
-      }, '<')
+        .from('#projects', {
+          y: -20,
+          duration: 0.5,
+          alpha: 0,
+        }, '<')
 
       return tl
     }
@@ -323,7 +336,7 @@ function Home() {
       />
       <SchemaMarkup type="Organization" />
       <Starting isComplete={startingComplete} />
-      <Hero />
+      <Hero data={data} error={error} loading={loading} />
       <section
         id="projects"
         className="max-w-full flex flex-col gap-4 overflow-x-hidden pb-10"
