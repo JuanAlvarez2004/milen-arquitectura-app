@@ -36,7 +36,7 @@ function Home() {
     const mediaUrl = media?.url
 
     if (!mediaUrl) return ''
-    if (mediaUrl.startsWith('http')) return mediaUrl
+    if (mediaUrl.startsWith('http') || mediaUrl.startsWith('https')) return mediaUrl
 
     return `${config.CMS_API_URL}${mediaUrl}`
   }
