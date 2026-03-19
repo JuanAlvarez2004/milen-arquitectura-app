@@ -13,87 +13,71 @@ import ProjectGrid from '../components/ProjectGrid.jsx'
 import Starting from '../components/Starting.jsx'
 import SEOHead from '../components/SEOHead.jsx'
 import SchemaMarkup from '../components/SchemaMarkup.jsx'
+import { fetchHomePage } from '../services/cmsApi'
+import { config } from '../config/config'
 
 import { useMediaQuery } from "react-responsive"
 
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin, SplitText, ScrollToPlugin, Draggable)
 
-const projectsObjs = [
-  {
-    id: 1,
-    title: "Wave House",
-    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://arquine.com/wp-content/uploads/2014/03/Untitled-2.jpg",
-    location: "Malibu, California",
-    year: "2023",
-    icon: 'https://svgsilh.com/svg_v2/304326.svg'
-  },
-  {
-    id: 2,
-    title: "Wave House",
-    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://cdn.pixabay.com/photo/2014/07/10/17/18/large-home-389271_1280.jpg",
-    location: "Malibu, California",
-    year: "2023",
-    icon: 'https://svgsilh.com/svg_v2/304326.svg'
-  },
-  {
-    id: 3,
-    title: "Wave House",
-    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://cdn.pixabay.com/photo/2017/07/09/03/19/home-2486092_1280.jpg",
-    location: "Malibu, California",
-    year: "2023",
-    icon: 'https://svgsilh.com/svg_v2/304326.svg'
-  },
-  {
-    id: 4,
-    title: "Wave House",
-    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://cdn.pixabay.com/photo/2020/04/17/12/28/pool-5055009_1280.jpg",
-    location: "Malibu, California",
-    year: "2023",
-    icon: 'https://svgsilh.com/svg_v2/304326.svg'
-  },
-  {
-    id: 5,
-    title: "Wave House",
-    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://cdn.pixabay.com/photo/2017/03/28/12/13/chairs-2181968_1280.jpg",
-    location: "Malibu, California",
-    year: "2023",
-    icon: 'https://svgsilh.com/svg_v2/304326.svg'
-  },
-  {
-    id: 6,
-    title: "Wave House",
-    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://cdn.pixabay.com/photo/2018/01/25/20/53/lifestyle-3107041_1280.jpg",
-    location: "Malibu, California",
-    year: "2023",
-    icon: 'https://svgsilh.com/svg_v2/304326.svg'
-  },
-  {
-    id: 7,
-    title: "Wave House",
-    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
-    image: "https://cdn.pixabay.com/photo/2020/06/25/10/21/architecture-5339245_1280.jpg",
-    location: "Malibu, California",
-    year: "2023",
-    icon: 'https://svgsilh.com/svg_v2/304326.svg'
-  },
-]
-
 
 function Home() {
   const [startingComplete, setStartingComplete] = useState(false)
   const [isReady, setIsReady] = useState(false)
-  const [isOpen, setIsOpen] = useState(Array(projectsObjs.length).fill(false))
+  const [projects, setProjects] = useState([])
+  const [isOpen, setIsOpen] = useState([])
   const projectRefs = useRef([])
   const draggableInstances = useRef([])
   const scrollTriggerInstances = useRef([])
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' })
+
+  const resolveMediaUrl = (media) => {
+    const mediaUrl = media?.url
+
+    if (!mediaUrl) return ''
+    if (mediaUrl.startsWith('http')) return mediaUrl
+
+    return `${config.CMS_API_URL}${mediaUrl}`
+  }
+
+  useEffect(() => {
+    let mounted = true
+    const controller = new AbortController()
+
+    fetchHomePage(controller.signal)
+      .then(({ data }) => {
+        if (!mounted) return
+
+        const cmsProjects = Array.isArray(data?.project) ? data.project : []
+        const parsedProjects = cmsProjects.map((project, idx) => {
+          const image1 = resolveMediaUrl(project?.image1)
+          const image2 = resolveMediaUrl(project?.image2) || image1
+
+          return {
+            id: idx + 1,
+            title: project?.title || '',
+            description: project?.description || '',
+            image1,
+            image2,
+            location: project?.location || '',
+            year: project?.year ? String(project.year) : '',
+          }
+        })
+
+        setProjects(parsedProjects)
+        setIsOpen(Array(parsedProjects.length).fill(false))
+      })
+      .catch(err => {
+        if (!mounted || err.name === 'AbortError') return
+        console.error('Error fetching projects from CMS:', err)
+      })
+
+    return () => {
+      mounted = false
+      controller.abort()
+    }
+  }, [])
 
   useLayoutEffect(() => {
     // Configuración inmediata
@@ -261,14 +245,17 @@ function Home() {
   }, [isReady])
 
   const handleOpen = (idx) => {
+    if (!projectRefs.current[idx]) return
+
     const newIsOpen = isOpen.map((open, i) => i === idx ? !open : open)
     setIsOpen(newIsOpen)
 
     const el = projectRefs.current[idx]
     const scrollTrigger = scrollTriggerInstances.current[idx]
-    const widthEl = el.offsetWidth
 
     if (el) {
+      const widthEl = el.offsetWidth
+
       // Si se está abriendo el proyecto
       if (!isOpen[idx] && newIsOpen[idx]) {
         gsap.from(el, {
@@ -344,11 +331,11 @@ function Home() {
         tabIndex={-1}
       >
         {
-          projectsObjs.length > 0 &&
-          projectsObjs.map((p, idx) => (
+          projects.length > 0 &&
+          projects.map((p, idx) => (
             <div
               ref={(el) => (projectRefs.current[idx] = el)}
-              key={idx}
+              key={p.id}
               onClick={() => handleOpen(idx)}
               className="project cursor-crosshair"
               role="button"

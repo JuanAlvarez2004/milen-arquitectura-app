@@ -47,7 +47,7 @@ function About() {
       />
       <SchemaMarkup type="custom" data={teamSchema} />
       <div className="max-w-4xl mx-auto">
-        <h1 id="about-title" className="font-serif text-4xl md:text-5xl text-black font-bold py-3 mb-8" role="heading" aria-level="1">
+        <h1 id="about-title" className="font-sans text-4xl md:text-5xl text-black font-bold py-3 mb-8" role="heading" aria-level="1">
           NOSOTROS
         </h1>
         

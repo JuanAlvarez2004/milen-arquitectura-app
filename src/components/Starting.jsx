@@ -35,7 +35,7 @@ const Starting = ({ isComplete }) => {
       <h1 className="sr-only">Milén Arquitectura - Cargando</h1>
       <span 
         id="starting-title" 
-        className="text-2xl font-bold font-serif text-white justify-self-end relative z-10" 
+        className="text-2xl font-bold font-sans text-white justify-self-end relative z-10" 
         role="heading" 
         aria-level="2"
         aria-label="Milén"
@@ -44,7 +44,7 @@ const Starting = ({ isComplete }) => {
       </span>
       <span 
         id="starting-sections" 
-        className="text-2xl text-white tracking-widest relative z-10" 
+        className="text-lg text-white tracking-widest relative z-10 pt-1" 
         aria-label="Secciones de la página"
       >
         IPSNC

@@ -12,7 +12,7 @@ const Header = () => {
   const handleNav = () => setIsOpen(false)
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen) {  
       setShowMenu(true);
     } else if (showMenu) {
       // Cierre: primero ítems desaparecen, luego el fondo se contrae
@@ -59,7 +59,7 @@ const Header = () => {
   return (
     <nav id="nav" className="bg-white fixed top-0 left-0 right-0 z-10 " aria-label="Menú principal de navegación">
       <div className="flex justify-between items-center p-5">
-        <div className="text-3xl font-bold font-serif" aria-label="Logo Milen Arquitectos">
+        <div className="text-3xl font-bold font-sans" aria-label="Logo Milen Arquitectos">
           <Link to="/" onClick={handleNav} aria-label="Ir a inicio" title="Inicio">MA</Link>
         </div>
         {/* Botón hamburguesa */}

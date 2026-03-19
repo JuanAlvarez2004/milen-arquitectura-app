@@ -1,9 +1,11 @@
+import Markdown from 'markdown-to-jsx'
+
 export default function ProjectGrid({ isOpen, project }) {
     return (
-        <div id="project" className="grid grid-flow-col grid-cols-[75px] md:grid-cols-[150px] justify-center gap-5 auto-cols-[250px] md:auto-cols-[600px] h-full" role="region" aria-label={`Proyecto: ${project.title}`}> 
+        <div id="project" className="grid grid-flow-col grid-cols-[75px] md:grid-cols-[150px] justify-center gap-5 auto-cols-[250px] md:auto-cols-[600px]" role="region" aria-label={`Proyecto: ${project.title}`}> 
             <div className="justify-items-end-safe">
                 <div className="h-10 w-10 overflow-hidden border rounded-xs p-1" aria-label="Icono del proyecto">
-                    <img className="object-contain w-full h-full" src={project.icon} alt={`Icono de ${project.title}`} title={`Icono de ${project.title}`} />
+                    <img className="object-contain w-full h-full" src={'https://svgsilh.com/svg_v2/304326.svg'} alt={`Icono de ${project.title}`} title={`Icono de ${project.title}`} />
                 </div>
                 <ul className="list-none text-end" aria-label="Detalles del proyecto">
                     <li className="text-black md:text-lg font-medium"><span aria-label="Título del proyecto">{project.title}</span></li>
@@ -12,15 +14,15 @@ export default function ProjectGrid({ isOpen, project }) {
                 </ul>
             </div>
             <div className="w-full" aria-label="Imagen principal del proyecto">
-                <img className="object-cover w-full h-full" src={project.image} alt={`Imagen del proyecto ${project.title}`} title={`Imagen del proyecto ${project.title}`} />
+                <img className="object-cover w-full h-full" src={project.image1} alt={`Imagen del proyecto ${project.title}`} title={`Imagen del proyecto ${project.title}`} />
             </div>
             <div className={!isOpen ? `hidden` : ''} aria-label="Descripción del proyecto">
-                <span>
-                    {project.description}
-                </span>
+                <Markdown>
+                    {project.description || ''}
+                </Markdown>
             </div>
             <div className={!isOpen ? `hidden` : ''} aria-label="Imagen adicional del proyecto">
-                <img className="object-cover w-full h-full" src={project.image} alt={`Imagen adicional del proyecto ${project.title}`} title={`Imagen adicional del proyecto ${project.title}`} />
+                <img className="object-cover w-full h-full" src={project.image2 || project.image1} alt={`Imagen adicional del proyecto ${project.title}`} title={`Imagen adicional del proyecto ${project.title}`} />
             </div>
         </div>
     )

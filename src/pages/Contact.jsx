@@ -99,7 +99,7 @@ function Contact() {
       <SchemaMarkup type="custom" data={contactSchema} />
       <div className="max-w-4xl mx-auto">
         <header>
-          <h1 id="contact-title" className="font-serif text-4xl md:text-5xl text-black font-bold py-3 mb-8">
+          <h1 id="contact-title" className="font-sans text-4xl md:text-5xl text-black font-bold py-3 mb-8">
             CONTACTO
           </h1>
         </header>

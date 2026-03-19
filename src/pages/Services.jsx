@@ -76,7 +76,7 @@ function Services() {
       <SchemaMarkup type="custom" data={servicesSchema} />
       <div className="max-w-4xl mx-auto">
         <header id="services-title" className='py-3 mb-8' role="banner">
-          <h1 className="font-serif text-4xl md:text-5xl text-black font-bold">
+          <h1 className="font-sans text-4xl md:text-5xl text-black font-bold">
             SERVICIOS
           </h1>
           <p className='text-gray-700 mt-2'>Enfoque residencial y comercial con soluciones personalizadas</p>
