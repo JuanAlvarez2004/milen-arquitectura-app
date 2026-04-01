@@ -7,90 +7,100 @@ import { TextPlugin } from "gsap/TextPlugin"
 import { SplitText } from "gsap/SplitText"
 import { ScrollToPlugin } from "gsap/ScrollToPlugin"
 import { Draggable } from "gsap/Draggable"
+import arqsImg from '../assets/images/arqs.webp'
 
 import Hero from '../components/Hero.jsx'
 import ProjectGrid from '../components/ProjectGrid.jsx'
 import Starting from '../components/Starting.jsx'
 import SEOHead from '../components/SEOHead.jsx'
 import SchemaMarkup from '../components/SchemaMarkup.jsx'
-import { fetchHomePage } from '../services/cmsApi'
-import { config } from '../config/config'
 
 import { useMediaQuery } from "react-responsive"
 
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin, SplitText, ScrollToPlugin, Draggable)
 
+const projectsObjs = [
+  {
+    id: 1,
+    title: "Wave House",
+    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
+    image1: "https://arquine.com/wp-content/uploads/2014/03/Untitled-2.jpg",
+    image2: "https://arquine.com/wp-content/uploads/2014/03/Untitled-2.jpg",
+    location: "Malibu, California",
+    year: "2023"
+  },
+  {
+    id: 2,
+    title: "Wave House",
+    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
+    image1: "https://cdn.pixabay.com/photo/2014/07/10/17/18/large-home-389271_1280.jpg",
+    image2: "https://cdn.pixabay.com/photo/2014/07/10/17/18/large-home-389271_1280.jpg",
+    location: "Malibu, California",
+    year: "2023"
+  },
+  {
+    id: 3,
+    title: "Wave House",
+    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
+    image1: "https://cdn.pixabay.com/photo/2017/07/09/03/19/home-2486092_1280.jpg",
+    image2: "https://cdn.pixabay.com/photo/2017/07/09/03/19/home-2486092_1280.jpg",
+    location: "Malibu, California",
+    year: "2023"
+  },
+  {
+    id: 4,
+    title: "Wave House",
+    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
+    image1: "https://cdn.pixabay.com/photo/2020/04/17/12/28/pool-5055009_1280.jpg",
+    image2: "https://cdn.pixabay.com/photo/2020/04/17/12/28/pool-5055009_1280.jpg",
+    location: "Malibu, California",
+    year: "2023"
+  },
+  {
+    id: 5,
+    title: "Wave House",
+    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
+    image1: "https://cdn.pixabay.com/photo/2017/03/28/12/13/chairs-2181968_1280.jpg",
+    image2: "https://cdn.pixabay.com/photo/2017/03/28/12/13/chairs-2181968_1280.jpg",
+    location: "Malibu, California",
+    year: "2023"
+  },
+  {
+    id: 6,
+    title: "Wave House",
+    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
+    image1: "https://cdn.pixabay.com/photo/2018/01/25/20/53/lifestyle-3107041_1280.jpg",
+    image2: "https://cdn.pixabay.com/photo/2018/01/25/20/53/lifestyle-3107041_1280.jpg",
+    location: "Malibu, California",
+    year: "2023"
+  },
+  {
+    id: 7,
+    title: "Wave House",
+    description: "Una casa moderna que fluye con el paisaje natural, incorporando curvas suaves que imitan las ondas del océano. El diseño integra espacios interiores y exteriores de manera fluida.",
+    image1: "https://cdn.pixabay.com/photo/2020/06/25/10/21/architecture-5339245_1280.jpg",
+    image2: "https://cdn.pixabay.com/photo/2020/06/25/10/21/architecture-5339245_1280.jpg",
+    location: "Malibu, California",
+    year: "2023"
+  },
+]
+
+const dataHero = {
+  heroTitle: "Milén Arquitectura",
+  heroDescription: "Somos un equipo de arquitectos apasionados por el diseño y la creación de espacios con soluciones innovadoras con el objetivo de **reflejar la esencia de nuestros clientes** y transformar espacios.",
+  heroImage: arqsImg,
+}
+
 
 function Home() {
   const [startingComplete, setStartingComplete] = useState(false)
   const [isReady, setIsReady] = useState(false)
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [projects, setProjects] = useState([])
-  const [isOpen, setIsOpen] = useState([])
+  const [isOpen, setIsOpen] = useState(() => Array(projectsObjs.length).fill(false))
   const projectRefs = useRef([])
   const draggableInstances = useRef([])
   const scrollTriggerInstances = useRef([])
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' })
-
-  const resolveMediaUrl = (media) => {
-    const mediaUrl = media?.url
-
-    if (!mediaUrl) return ''
-    if (mediaUrl.startsWith('http') || mediaUrl.startsWith('https')) return mediaUrl
-
-    return `${config.CMS_API_URL}${mediaUrl}`
-  }
-
-  useEffect(() => {
-    let mounted = true
-    const controller = new AbortController()
-    setLoading(true)
-    setError(null)
-
-    fetchHomePage(controller.signal)
-      .then(({ data }) => {
-        if (!mounted) return
-
-        setData(data)
-        const cmsProjects = Array.isArray(data?.project)
-          ? data.project
-          : (Array.isArray(data?.projects) ? data.projects : [])
-        const parsedProjects = cmsProjects.map((project, idx) => {
-          const image1 = resolveMediaUrl(project?.image1)
-          const image2 = resolveMediaUrl(project?.image2) || image1
-
-          return {
-            id: idx + 1,
-            title: project?.title || '',
-            description: project?.description || '',
-            image1,
-            image2,
-            location: project?.location || '',
-            year: project?.year ? String(project.year) : '',
-          }
-        })
-
-        setProjects(parsedProjects)
-        setIsOpen(Array(parsedProjects.length).fill(false))
-      })
-      .catch(err => {
-        if (!mounted || err.name === 'AbortError') return
-        console.error('Error fetching projects from CMS:', err)
-        setError(err)
-      })
-      .finally(() => {
-        if (!mounted) return
-        setLoading(false)
-      })
-
-    return () => {
-      mounted = false
-      controller.abort()
-    }
-  }, [])
 
   useLayoutEffect(() => {
     // Configuración inmediata
@@ -260,7 +270,11 @@ function Home() {
   const handleOpen = (idx) => {
     if (!projectRefs.current[idx]) return
 
-    const newIsOpen = isOpen.map((open, i) => i === idx ? !open : open)
+    const currentIsOpen = isOpen.length === projectsObjs.length
+      ? isOpen
+      : Array(projectsObjs.length).fill(false)
+
+    const newIsOpen = currentIsOpen.map((open, i) => i === idx ? !open : open)
     setIsOpen(newIsOpen)
 
     const el = projectRefs.current[idx]
@@ -270,14 +284,14 @@ function Home() {
       const widthEl = el.offsetWidth
 
       // Si se está abriendo el proyecto
-      if (!isOpen[idx] && newIsOpen[idx]) {
+      if (!currentIsOpen[idx] && newIsOpen[idx]) {
         gsap.from(el, {
           duration: 1,
           autoAlpha: 0,
           ease: "power1.out"
         })
 
-        let heightToMove = isMobile ? 250 : 460
+        let heightToMove = isMobile ? 250 : 390
         let offSetX = isMobile ? -90 : 300
 
         gsap.to(el, {
@@ -300,7 +314,7 @@ function Home() {
         })[0]
       }
       // Si se está cerrando el proyecto
-      else if (isOpen[idx] && !newIsOpen[idx]) {
+      else if (currentIsOpen[idx] && !newIsOpen[idx]) {
         // Destruir draggable si existe
         if (draggableInstances.current[idx]) {
           draggableInstances.current[idx].kill()
@@ -336,7 +350,7 @@ function Home() {
       />
       <SchemaMarkup type="Organization" />
       <Starting isComplete={startingComplete} />
-      <Hero data={data} error={error} loading={loading} />
+      <Hero data={dataHero} />
       <section
         id="projects"
         className="max-w-full flex flex-col gap-4 overflow-x-hidden pb-10"
@@ -344,8 +358,8 @@ function Home() {
         tabIndex={-1}
       >
         {
-          projects.length > 0 &&
-          projects.map((p, idx) => (
+          projectsObjs.length > 0 &&
+          projectsObjs.map((p, idx) => (
             <div
               ref={(el) => (projectRefs.current[idx] = el)}
               key={p.id}

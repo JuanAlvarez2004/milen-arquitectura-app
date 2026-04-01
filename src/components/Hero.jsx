@@ -1,14 +1,10 @@
-import arqsImg from '../assets/images/arqs.webp'
 import Markdown from 'markdown-to-jsx'
-import { config } from '../config/config'
+// import { config } from '../config/config'
 
 const Hero = ({ data, error, loading }) => {
   const heroTitle = (data?.heroTitle || '').toUpperCase()
   const heroDescription = data?.heroDescription || ''
-  const heroImgPath = data?.heroImage?.url
-  const heroImgSrc = heroImgPath
-    ? (heroImgPath.startsWith('http') ? heroImgPath : `${config.CMS_API_URL}${heroImgPath}`)
-    : arqsImg
+  const heroImgSrc = data?.heroImage
 
   return (
     <header id='header' className="w-full mt-15 p-20 text-gray-700 text-center md:text-left text-balance flex flex-col md:flex-row items-center justify-center flex-wrap gap-4" aria-label="Sección principal de presentación">
